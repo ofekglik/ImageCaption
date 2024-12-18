@@ -3,25 +3,45 @@ import os
 import torch
 from torch.utils.data import Dataset
 from typing import Dict
-
+import nltk
+from nltk.tokenize import word_tokenize
+import re
 from src.utils import load_image
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+
+def preprocess_text(text: str) -> str:
+    text = text.lower()
+
+    # Remove special characters and extra whitespace
+    text = re.sub(r'[^\w\s]', ' ', text)
+    text = ' '.join(text.split())
+
+    return text
 
 
 def create_flickr_dataframe(captions_file: str, images_dir: str) -> pd.DataFrame:
     """Create a DataFrame from Flickr30k dataset."""
     df = pd.read_csv(captions_file, header=0, names=['filename', 'caption'], encoding='utf-8')
     df['caption'] = df['caption'].str.strip().str.strip('"')
+    df['caption'] = df['caption'].apply(preprocess_text)  # Add preprocessing
     df['image_path'] = df['filename'].apply(lambda x: os.path.join(images_dir, x))
     return df
 
 
 def build_vocabulary(df: pd.DataFrame, min_freq: int = 5) -> dict:
-    """Build vocabulary from captions."""
+    """Build vocabulary from captions using NLTK word_tokenize."""
     word_freq = {}
     df['caption'] = df['caption'].astype(str)
+
     for caption in df['caption']:
-        for word in caption.lower().split():
-            word_freq[word] = word_freq.get(word, 0) + 1
+        tokens = word_tokenize(caption.lower())
+        for token in tokens:
+            word_freq[token] = word_freq.get(token, 0) + 1
 
     vocab = {
         '<pad>': 0,
@@ -75,7 +95,7 @@ class FlickrDataset(Dataset):
 
         image = load_image(image_path, self.transform)
 
-        tokens = caption.lower().split()
+        tokens = word_tokenize(caption.lower())
         tokens = tokens[:(self.max_length - 2)]
 
         tokens = ['<start>'] + tokens + ['<end>']
