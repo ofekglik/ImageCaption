@@ -13,7 +13,7 @@ The system works by:
 
 - Uses PyTorch Lightning for organized training
 - Pre-trained ResNet50 encoder
-- LSTM decoder with attention
+- LSTM decoder 
 - NLTK integration for text preprocessing
 - Supports the Flickr30k dataset
 - Configurable model architecture and training parameters
