@@ -28,7 +28,7 @@ The system works by:
 - Projects features to embedding space
 
 ### Decoder
-- LSTM-based decoder
+- Single Layer LSTM-based decoder
 - Word embedding layer
 - Teacher forcing during training
 - Greedy search for caption generation
