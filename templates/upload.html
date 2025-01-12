@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Explainer - Upload</title>
+    <style>
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .header p {
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-form {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            margin: 10px 0;
+            background: #fde8e8;
+            border-radius: 4px;
+        }
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Image Explainer</h1>
+        <p>Upload an Image for Explanation</p>
+    </div>
+    <div class="content">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+            <div>
+                <label for="file">Choose an image:</label>
+                <input type="file" id="file" name="file" accept="image/*" required>
+            </div>
+            <div>
+                <label for="text">Your description (optional):</label>
+                <input type="text" id="text" name="text" placeholder="Add your own description...">
+            </div>
+            <input type="submit" value="Upload and Generate Caption">
+        </form>
+    </div>
+</body>
+</html>

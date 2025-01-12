@@ -86,3 +86,20 @@ def display_image_with_captions(image_path, captions) -> str:
 
     display(HTML(html))
     return image_path
+
+
+def generate_caption_for_image(image_path, model, device='cuda' if torch.cuda.is_available() else 'cpu'):
+    # Display the original image
+    img = Image.open(image_path)
+    display(img)
+
+    _, transform = get_transforms()
+
+    image = transform(img)
+    image = image.to(device)
+
+    model.eval()
+    with torch.no_grad():
+        caption = model.generate_caption(image)
+
+    return caption
